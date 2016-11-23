@@ -109,5 +109,5 @@ If you are only interested in how much money you're making, you can skip the fre
 $reporter->setReportModeEarningsOnly();  //Default is $reporter->setReportModeAll();
 ```
 ## Todo list ##
-- Manage other types of reports (Subscription, Subscription Event and Newstand) : settings are there but have no idea of the possible outpurs of such requests
-- Allow a return of iTunes connect raw data
+- Manage other types of reports (Subscription, Subscription Event and Newstand) : settings are there but have no idea of the possible outputs of such requests
+- Return iTunes connect raw data if needed
