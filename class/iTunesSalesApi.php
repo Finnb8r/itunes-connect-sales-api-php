@@ -537,6 +537,8 @@ class iTunesSalesApi
         $body = substr($return, $header_size);
 
 
+		
+
         $headerAsArray = $this->_curlHeadersAsArray($header)[0];
 
         if(isset($headerAsArray["filename"])){
@@ -624,18 +626,20 @@ class iTunesSalesApi
             }
             else{
 
-                $sDate = date("Ymd",strtotime($data[$key_beginDate]));
-                $eDate = date("Ymd",strtotime($data[$key_endDate]));
+				if(isset($data[$key_beginDate]) && isset($data[$key_endDate])){
+                	$sDate = date("Ymd",strtotime($data[$key_beginDate]));
+                	$eDate = date("Ymd",strtotime($data[$key_endDate]));
 
 
-                if(($sDate < $earliestDate && $sDate !=19700101)  || $earliestDate == 0){
-                    $earliestDate = $sDate;
-                }
-                if(($eDate > $latestDate && $eDate !=19700101) || $latestDate == 0){
-                    $latestDate = $eDate;
-                }
+               		if(($sDate < $earliestDate && $sDate !=19700101)  || $earliestDate == 0){
+                    	$earliestDate = $sDate;
+                	}
+                	if(($eDate > $latestDate && $eDate !=19700101) || $latestDate == 0){
+                    	$latestDate = $eDate;
+               	 	}
+               	 }
 
-                if($data[$key_fullPrice] > 0){
+                if(isset($data[$key_fullPrice]) && $data[$key_fullPrice] > 0){
 
                     $price 		= $data[$key_fullPrice];
                     $earnings	= $data[$key_earning];
@@ -662,13 +666,15 @@ class iTunesSalesApi
                     }
                 }else{
                     if($this->_reportMode == self::REPORT_MODE_ALL){
-                        
-                        $nb_downloads += $data[$key_units];
-                        $s = array();
-                        foreach($head as $k => $v){
-                            $s[$v] = $data[$k];
+                        if(isset($data[$key_units])){
+                        	
+                        	$nb_downloads += $data[$key_units];
+                        	$s = array();
+                        	foreach($head as $k => $v){
+                           	 	$s[$v] = $data[$k];
+                       		}
+                        	$sales[] = $s;
                         }
-                        $sales[] = $s;
                     }
                 }
             }
