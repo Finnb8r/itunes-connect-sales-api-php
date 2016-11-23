@@ -34,6 +34,7 @@ $reporter->setLogin("mylogin@example.com")
 try{
 	//$data is either an array or false
     //if false you can get errors by calling getErrorsAsString() or listing $reporter->errors
+    //Date must be YYYYMMDD format (ex: 20161122) for the 12th november 2016
 	if($data = $reporter->getSalesDailyReport("20161122")) { // You do not need to specify a date (defaut is yesterday)
 		//Do something with data your're good to got
 		print_r(json_encode($data));
@@ -48,6 +49,7 @@ try{
 ### Weekly report ###
 ```php
 try{
+	//Date must be YYYYMMDD format (ex: 20161122) for the 12th november 2016 and week will be calculated
 	if($data = $reporter->getSalesWeeklyReport()) { //Will get last week by default
 		//Do something with data your're good to got
 		print_r(json_encode($data));
@@ -62,6 +64,7 @@ try{
 ### Monthly report ###
 ```php
 try{
+	//Date must be YYYYMM format (ex: 201611) for november 2016
 	if($data = $reporter->getSalesMonthlyReport()) { //Will get last month by default
 		//Do something with data your're good to got
 		print_r(json_encode($data));
@@ -76,6 +79,7 @@ try{
 ### Yearly report ###
 ```php
 try{
+	//Date must be YYYY format (ex: 2016) 
 	if($data = $reporter->getSalesYearlyReport()) { //Will get last year by default
 		//Do something with data your're good to got
 		print_r(json_encode($data));
