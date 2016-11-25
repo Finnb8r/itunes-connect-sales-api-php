@@ -555,11 +555,11 @@ class iTunesSalesApi
         }
 
         if(isset($headerAsArray["ERRORMSG"])){
-            $this->_returnError($headerAsArray["ERRORMSG"]);
+            $this->_returnError($headerAsArray["ERRORMSG"],true);
             return false;
         }
         //No error message, no exception, no report...
-        $this->_returnError("Unknown error has ocured (http code ".$code." )");
+        $this->_returnError("Unknown error has ocured (http code ".$code." )",true);
         return false;
     }
 
