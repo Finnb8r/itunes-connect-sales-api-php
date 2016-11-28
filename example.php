@@ -13,7 +13,7 @@ $reporter->setLogin("user@example.com")
 			->setVendor("myvendorID")
 			->setFolder("/home/web/path/folder/sales")
 			->setUseCache(true)
-			->setReportModeEarningsOnly();
+			->setReportModeAll();
 
 
 // Addtionnal options
@@ -33,10 +33,11 @@ $reporter->setUseCache(false); //true by default
 
 // [OPTIONAL] 
 // Change report mode
-// setReportModeAll will return sales and app downloads
-$reporter->setReportModeAll(); //By default
 // setReportModeEarningsOnly will only return sales (over 0.0€)
 $reporter->setReportModeEarningsOnly(); 
+// setReportModeAll will return sales and app downloads
+$reporter->setReportModeAll(); //By default
+
 
 //Get the daily report
 try{
