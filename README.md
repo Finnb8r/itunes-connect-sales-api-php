@@ -3,7 +3,7 @@ PHP iTunes Connect Sales Reports API
 
 ## Features
 - Simple, PHP class that returns iTunes Connect Sales Reports in JSON 
-- Get daily, weekly, monthly or yearly sales report directly from iTunes Connect
+- Get daily, weekly, monthly or yearly sales (+ free app downloads as well) report directly from iTunes Connect
 
 ## Requirements ##
 * PHP 
@@ -15,6 +15,11 @@ Get your vendor id by : <br>
 >Click on "Top content" ("Classement des contenus" in French) and then "Reports"<br>
 >You'll see the list of vendors
 
+## Limitations ##
+* You will not be able to get a daily report for today (yesterday is the earliest)
+* Most recent weekly report is last week
+* Most recent monthly report is last month
+* Most recent yearly report is last year
 
 ## Getting Started ##
 Simply require the iTunesSalesApi.php and you're good to go <br>
