@@ -18,7 +18,8 @@ Get your vendor id by : <br>
 >Login to iTunes Connect<br>
 >Go to "Sales and trends"<br>
 >Click on "Top content" ("Classement des contenus" in French) and then "Reports"<br>
->You'll see the list of vendors
+>You'll see the list of vendors<br><br>
+Or simply call the getVendors() of the iTunesSalesApi
 
 ## Limitations ##
 * You will not be able to get a daily report for today (yesterday is the earliest)
@@ -39,6 +40,41 @@ $reporter->setLogin("mylogin@example.com")
 			->setVendor("myVendorId");
 ```
 ## Quick Example ##
+### Fetch the list of accounts ###
+```php
+try{
+	//return is either an array or false
+    //if false you can get errors by calling getErrorsAsString() or listing $reporter->errors
+    if($accounts = $reporter->getAccounts()){
+		//Do something with data your're good to go
+		print_r(json_encode($accounts));
+	}
+	else{
+		echo "Api  Errors : ".$reporter->getErrorsAsString();
+	}
+}catch (Exception $e){
+	echo $e->getMessage();
+}
+```
+### Fetch the list of vendor id's ###
+```php
+try{
+	//return is either an array or false
+    //if false you can get errors by calling getErrorsAsString() or listing $reporter->errors
+	if($vendors = $reporter->getVendors()){
+		//Do something with data your're good to got
+		print_r(json_encode($vendors));
+		
+		//Example
+		$reporter->setVendor($vendors[0]);
+	}
+	else{
+		echo "Api  Errors : ".$reporter->getErrorsAsString();
+	}
+}catch (Exception $e){
+	echo $e->getMessage();
+}
+```
 ### Daily report ###
 ```php
 try{
@@ -118,7 +154,7 @@ If you are only interested in how much money you're making, you can skip the fre
 ```php
 $reporter->setReportModeEarningsOnly();  //Default is $reporter->setReportModeAll();
 ```
-## Example output ## <br>
+## Example output ##
 ```php
 {
   "success": true,
