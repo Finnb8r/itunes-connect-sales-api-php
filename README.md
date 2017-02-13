@@ -188,5 +188,4 @@ $reporter->setReportModeEarningsOnly();  //Default is $reporter->setReportModeAl
 ## Todo list ##
 - Manage other types of reports (Subscription, Subscription Event and Newstand) : settings are there but have no idea of the possible outputs of such requests
 - Return iTunes connect raw data if needed
-- Implement getVendors() and getAccounts()
 - Manage Finance 
