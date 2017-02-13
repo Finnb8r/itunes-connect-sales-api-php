@@ -8,7 +8,7 @@
 class iTunesSalesApi
 {
 
-    const ITUNES_CONNECT_ENDPOINT = 'https://reportingitc.apple.com/autoingestion.tft';
+    const ITUNES_CONNECT_ENDPOINT = 'https://reportingitc-reporter.apple.com/reportservice/sales/v1';
 
     const REPORT_TYPE_SALES = 'Sales';
     const SUBTYPE_SALES_SUMMARY = 'Summary';
@@ -500,31 +500,28 @@ class iTunesSalesApi
 
         //Build request parameters
         $allParams  = array(
-            "USERNAME"=> $this->_userName,
-            "PASSWORD"=> $this->_password,
-            "VNDNUMBER"=> $this->_vendor,
-            "TYPEOFREPORT"=> $this->_reportType,
-            "DATETYPE"=> $this->_reportDateType,
-            "REPORTTYPE"=>$this->_reportSubType,
-            "REPORTDATE"=>$this->_reportDate
+            "userid"=> $this->_userName,
+            "password"=> $this->_password,
+            "version"=> "1.0",
+            "mode"=> "Robot.XML",
+            "queryInput"=> "[p=Reporter.properties, Sales.getReport, ".$this->_vendor.",".$this->_reportType.",".$this->_reportSubType.",".$this->_reportDateType.",".$this->_reportDate."]"
         );
 
 
-        $fields_string = "";
-        foreach ($allParams as $key => $value) {
-            $fields_string .= $key . '=' . $value . '&';
-        }
-        $fields_string = rtrim($fields_string, "&");
+        $jsonParams = "jsonRequest=".json_encode($allParams);
 
         //Do the cURL request
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, self::ITUNES_CONNECT_ENDPOINT);
         curl_setopt($curl, CURLOPT_HEADER, 1);
+         curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/x-www-form-urlencoded'
+        ));
         curl_setopt($curl, CURLINFO_HEADER_OUT, true);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_VERBOSE, '1');
-        curl_setopt($curl, CURLOPT_POST, count($allParams));
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $fields_string);
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $jsonParams);
 
         //Execute the request
         $return = curl_exec($curl);
