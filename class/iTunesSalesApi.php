@@ -8,7 +8,8 @@
 class iTunesSalesApi
 {
 
-    const ITUNES_CONNECT_ENDPOINT = 'https://reportingitc-reporter.apple.com/reportservice/sales/v1';
+    const ITUNES_CONNECT_SALES_ENDPOINT   = 'https://reportingitc-reporter.apple.com/reportservice/sales/v1';
+    const ITUNES_CONNECT_FINANCE_ENDPOINT = 'https://reportingitc-reporter.apple.com/reportservice/finance/v1';
 
     const REPORT_TYPE_SALES = 'Sales';
     const SUBTYPE_SALES_SUMMARY = 'Summary';
@@ -39,6 +40,10 @@ class iTunesSalesApi
 
     const REPORT_MODE_ALL          = 'A';
     const REPORT_MODE_EARNING_ONLY = 'B';
+    
+    const URL_PARAM_SALES_REPORT   = "Sales.getReport";
+    const URL_PARAM_SALES_VENDORS  = "Sales.getVendors";
+    const URL_PARAM_SALES_ACCOUNTS = "Sales.getAccounts";
 
     /**
      * Show non critical errors, if set to false, you can get errors  by calling getSoftErrors()
@@ -135,6 +140,21 @@ class iTunesSalesApi
      * @var string
      */
     private $_outputFolder;
+    
+    /**
+     * URL the request will be made on
+     *
+     * @var boolean
+     */
+    private $_endpoint     = self::ITUNES_CONNECT_SALES_ENDPOINT;
+
+
+    /**
+     * The URL params for sales (report,vendors or accounts
+     *
+     * @var boolean
+     */
+    private $_queryMode    = self::URL_PARAM_SALES_REPORT;
 
 
     /**
@@ -268,6 +288,26 @@ class iTunesSalesApi
         $this->_outputFolder = $folder;
         return $this;
     }
+    
+    /**
+     * 
+     * @return array|bool
+     */
+    public function getVendors()
+    {
+        $this->_queryMode = self::URL_PARAM_SALES_VENDORS;
+        return $this->_executeRequest();
+    }
+
+	/**
+     * 
+     * @return array|bool
+     */
+    public function getAccounts()
+    {
+        $this->_queryMode = self::URL_PARAM_SALES_ACCOUNTS;
+        return $this->_executeRequest();
+    }
 
     /**
      * @param null $date
@@ -390,6 +430,9 @@ class iTunesSalesApi
      */
     private function _getSalesReport($date, $dateType)
     {
+   		
+   		//Set the adequate params
+        $this->_queryMode = self::URL_PARAM_SALES_REPORT;
     
     	//Reset the errors
     	$this->errors 			= array();
@@ -490,12 +533,19 @@ class iTunesSalesApi
 
         $fileName = strtoupper(substr($this->_reportType,0,1))."_".strtoupper(substr($this->_reportSubType,0,1))."_".strtoupper(substr($this->_reportDateType,0,1))."_".$this->_vendor."_".$this->_reportDate.".txt";
 
-        //Check if the file exists, return it if it's the case
-        if($this->_outputFolder != null){
+        //Check if the file exists, return it if it's the case (only for the reports)
+        if($this->_outputFolder != null && $this->_queryMode == self::URL_PARAM_SALES_REPORT){
             if(file_exists($this->_outputFolder.$fileName) && !$this->_forceRefresh){
                 return $this->_parseSalesReport($this->_outputFolder.$fileName);
             }
         }
+        
+        //Build the query input
+        $queryInput = "[p=Reporter.properties, ".$this->_queryMode;
+        if($this->_queryMode == self::URL_PARAM_SALES_REPORT){
+            $queryInput.=", ".$this->_vendor.",".$this->_reportType.",".$this->_reportSubType.",".$this->_reportDateType.",".$this->_reportDate;
+        }
+        $queryInput.="]";
 
 
         //Build request parameters
@@ -503,8 +553,8 @@ class iTunesSalesApi
             "userid"=> $this->_userName,
             "password"=> $this->_password,
             "version"=> "1.0",
-            "mode"=> "Robot.XML",
-            "queryInput"=> "[p=Reporter.properties, Sales.getReport, ".$this->_vendor.",".$this->_reportType.",".$this->_reportSubType.",".$this->_reportDateType.",".$this->_reportDate."]"
+            "mode"=> "Normal",
+            "queryInput"=> $queryInput
         );
 
 
@@ -512,7 +562,7 @@ class iTunesSalesApi
 
         //Do the cURL request
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, self::ITUNES_CONNECT_ENDPOINT);
+        curl_setopt($curl, CURLOPT_URL, $this->_endpoint);
         curl_setopt($curl, CURLOPT_HEADER, 1);
          curl_setopt($curl, CURLOPT_HTTPHEADER, array(
             'Content-Type: application/x-www-form-urlencoded'
@@ -534,8 +584,23 @@ class iTunesSalesApi
         $body = substr($return, $header_size);
 
 
+		//Accounts and vendors
+        if($this->_queryMode != self::URL_PARAM_SALES_REPORT)
+        {
+            if($code == 200){
+                $values = explode("\n",$body);
+                $end_item = end($values);
+                if (empty($end_item)) {
+                    array_pop($values);
+                }
+                return $values;
+            }else{
+                $this->_returnError($body);
+                return false;
+            }
+        }
 		
-
+		//Else, reports
         $headerAsArray = $this->_curlHeadersAsArray($header)[0];
 
         if(isset($headerAsArray["filename"])){

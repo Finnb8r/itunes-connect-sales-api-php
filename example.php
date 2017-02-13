@@ -39,6 +39,43 @@ $reporter->setReportModeEarningsOnly();
 $reporter->setReportModeAll(); //By default
 
 
+
+//Get the vendors
+try{
+	
+	if($vendors = $reporter->getVendors()){
+		//Do something with data your're good to got
+		print_r(json_encode($vendors));
+		
+		//Example
+		$reporter->setVendor($vendors[0]);
+	}
+	else{
+		echo "Api  Errors : ".$reporter->getErrorsAsString();
+	}
+}catch (Exception $e){
+	echo $e->getMessage();
+}
+die;
+
+
+
+//Get the accounts
+try{
+	
+	if($accounts = $reporter->getAccounts()){
+		//Do something with data your're good to got
+		print_r(json_encode($accounts));
+	}
+	else{
+		echo "Api  Errors : ".$reporter->getErrorsAsString();
+	}
+}catch (Exception $e){
+	echo $e->getMessage();
+}
+die;
+
+
 //Get the daily report
 try{
 	//$data is either an array or false, if false you can get errors by calling getErrorsAsString() or listing $reporter->errors
@@ -91,6 +128,8 @@ try{
 }catch (Exception $e){
 	echo $e->getMessage();
 }
+
+
 
 
 
