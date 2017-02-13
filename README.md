@@ -1,6 +1,6 @@
-# [UPDATE 20 december 2016]
-Apple have shutdown the autoingestion toolon december 13th 2016 and api now indicates that "Autoingestion tool is no longer available".<br>
-**This API no longer seems to work, an update will be released to make use of the reporter instead**
+# [UPDATE 12 Feb 2017]
+Apple have shutdown the autoingestion tool on december 13th 2016.
+Current version now works with the reporter service.<br>
 
 # itunes-connect-sales-api-php
 PHP iTunes Connect Sales Reports API
