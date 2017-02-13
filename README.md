@@ -1,6 +1,7 @@
 # [UPDATE 12 Feb 2017]
+Current version now works with the reporter service as <br>
 Apple have shutdown the autoingestion tool on december 13th 2016.
-Current version now works with the reporter service.<br>
+<br>
 
 # itunes-connect-sales-api-php
 PHP iTunes Connect Sales Reports API
@@ -117,6 +118,75 @@ If you are only interested in how much money you're making, you can skip the fre
 ```php
 $reporter->setReportModeEarningsOnly();  //Default is $reporter->setReportModeAll();
 ```
+## Example output ## <br>
+```php
+{
+  "success": true,
+  "response": {
+    "report_start_date": "20170212",
+    "report_end_date": "20170212",
+    "number_sales": 35,
+    "app_downloads": 808,
+    "revenues": {
+      "USD": {
+        "turnover": 35.88,
+        "earnings": 25.2,
+        "sales": 25
+      },
+      "PHP": {
+        "turnover": 99,
+        "earnings": 69.3,
+        "sales": 1
+      },
+      "EUR": {
+        "turnover": 7.97,
+        "earnings": 4.62,
+        "sales": 4
+      },
+      "CHF": {
+        "turnover": 4,
+        "earnings": 2.6,
+        "sales": 2
+      },
+      "CAD": {
+        "turnover": 2.79,
+        "earnings": 1.95,
+        "sales": 3
+      }
+    },
+    "details": [
+      {
+        "Provider": "APPLE",
+        "Provider Country": "US",
+        "SKU": "AppSKU",
+        "Developer": "Developer Name",
+        "Title": "App Name",
+        "Version": "1.4",
+        "Product Type Identifier": "1F",
+        "Units": "6",
+        "Developer Proceeds": "0",
+        "Begin Date": "02/12/2017",
+        "End Date": "02/12/2017",
+        "Customer Currency": "USD",
+        "Country Code": "US",
+        "Currency of Proceeds": "USD",
+        "Apple Identifier": "1111111111",
+        "Customer Price": "0",
+        "Promo Code": " ",
+        "Parent Identifier": " ",
+        "Subscription": " ",
+        "Period": " ",
+        "Category": "Health & Fitness",
+        "CMB": "",
+        "Device": "iPad",
+        "Supported Platforms": "iOS",
+        "Proceeds Reason": " ",
+        "Preserved Pricing": " ",
+        "Client": " "
+      },(...)
+```
 ## Todo list ##
 - Manage other types of reports (Subscription, Subscription Event and Newstand) : settings are there but have no idea of the possible outputs of such requests
 - Return iTunes connect raw data if needed
+- Implement getVendors() and getAccounts()
+- Manage Finance 
