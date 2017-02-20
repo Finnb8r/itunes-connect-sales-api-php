@@ -619,7 +619,8 @@ class iTunesSalesApi
 		if(!is_array($curlHeaders) || count($curlHeaders) == 0)
 		{	
 			//Print the cUrl error
-			$this->_returnError("Unknown error has ocured : ".$cerror,true);
+			$this->_returnError("Unknown error has occured : ".$cerror,true);
+			return false;
 		}
 		
 		
@@ -643,7 +644,7 @@ class iTunesSalesApi
             return false;
         }
         //No error message, no exception, no report...
-        $this->_returnError("Unknown error has ocured (http code ".$code." )",true);
+        $this->_returnError("Unknown error has ocured (http code ".$code.", content : ".$body." )",true);
         return false;
     }
 
