@@ -655,12 +655,24 @@ class iTunesSalesApi
      */
     private function _saveTemporarily($name, $content)
     {
-        $file = DIRECTORY_SEPARATOR .
-            trim(sys_get_temp_dir(), DIRECTORY_SEPARATOR) .
-            DIRECTORY_SEPARATOR .
-            ltrim($name, DIRECTORY_SEPARATOR);
-
-        file_put_contents($file, $content);
+       
+            
+        $file = ini_get('upload_tmp_dir') ? ini_get('upload_tmp_dir') : sys_get_temp_dir();
+        $file = ltrim($file, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$name;
+        
+        $writtent = @file_put_contents($file, $content);
+        
+        if($writtent === FALSE){
+        
+        	$file = DIRECTORY_SEPARATOR.$file;
+        	
+        	$writtentb = @file_put_contents($file, $content);
+        	if($writtentb === FALSE){
+        		$this->_returnError("Unable to write temp file ".$file.", please configure to allow temp files or check your tmp path",true);
+           		return false;
+        	}
+        }
+       
 
         register_shutdown_function(function() use($file) {
             unlink($file);
