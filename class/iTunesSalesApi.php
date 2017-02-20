@@ -619,7 +619,7 @@ class iTunesSalesApi
 		if(!is_array($curlHeaders) || count($curlHeaders) == 0)
 		{	
 			//Print the cUrl error
-			$this->_returnError(cerror,true);
+			$this->_returnError("Unknown error has ocured : ".$cerror,true);
 		}
 		
 		
