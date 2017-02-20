@@ -630,10 +630,10 @@ class iTunesSalesApi
             //All good
             if($this->_outputFolder != null){
                 //save it
-                file_put_contents($this->_outputFolder.$fileName,gzdecode($body));
+                file_put_contents($this->_outputFolder.$fileName,$this->agzdecode($body));
                 $name = $this->_outputFolder.$fileName;
             }else{
-                $name = $this->_saveTemporarily($fileName,gzdecode($body));
+                $name = $this->_saveTemporarily($fileName,$this->agzdecode($body));
             }
             return $this->_parseSalesReport($name);
 
@@ -675,7 +675,14 @@ class iTunesSalesApi
      */
     private function _parseSalesReport($file)
     {
-
+   
+		$fp = @fopen($file, 'r');
+		if($fp === FALSE)
+		{
+			$this->_returnError("Unable to open file ".$file,true);
+            return false;
+		}
+		
         $key_sku		 = 2;
         $key_earning 	 = 8;
         $key_beginDate 	 = 9;
@@ -693,7 +700,6 @@ class iTunesSalesApi
         $latestDate      = 0;
 
         $delimiter       =  "\t";
-        $fp              = fopen($file, 'r');
         $nb_sales 	     = 0;
 
         $nb_downloads    = 0;
@@ -837,6 +843,13 @@ class iTunesSalesApi
         }
         return $headers;
     }
+    
+    private function agzdecode($data) { 
+    	/*if (function_exists("gzdecode")) {
+    		return gzdecode($data); 
+    	}*/
+    	return gzinflate(substr($data,10,-8)); 
+	}
 }
 
 
