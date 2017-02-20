@@ -156,6 +156,12 @@ class iTunesSalesApi
      */
     private $_queryMode    = self::URL_PARAM_SALES_REPORT;
 
+	 /**
+     * Disable SSL checks
+     *
+     * @var boolean
+     */
+    public $disableCurlSSL = false;
 
     /**
      * iTunesSalesApi constructor.
@@ -572,17 +578,23 @@ class iTunesSalesApi
         curl_setopt($curl, CURLOPT_VERBOSE, '1');
         curl_setopt($curl, CURLOPT_POST, 1);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $jsonParams);
+        
+        if($this->disableCurlSSL){
+        	curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        	curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        }
 
         //Execute the request
         $return = curl_exec($curl);
         $info   = curl_getinfo($curl);
         $code   = $info["http_code"];
+        $cerror = curl_error($curl);
+        
         curl_close($curl);
 
         $header_size = $info["header_size"];
         $header = substr($return, 0, $header_size);
         $body = substr($return, $header_size);
-
 
 		//Accounts and vendors
         if($this->_queryMode != self::URL_PARAM_SALES_REPORT)
@@ -601,7 +613,17 @@ class iTunesSalesApi
         }
 		
 		//Else, reports
-        $headerAsArray = $this->_curlHeadersAsArray($header)[0];
+		$curlHeaders   = $this->_curlHeadersAsArray($header);
+		
+		//Some error (issue #1 by FranRomero)
+		if(!is_array($curlHeaders) || count($curlHeaders) == 0)
+		{	
+			//Print the cUrl error
+			$this->_returnError(cerror,true);
+		}
+		
+		
+        $headerAsArray = $curlHeaders[0];
 
         if(isset($headerAsArray["filename"])){
             //All good
