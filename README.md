@@ -56,6 +56,15 @@ try{
 	echo $e->getMessage();
 }
 ```
+### Set a specific account (optionnal if you have only one account) ###
+```php
+$accounts = $reporter->getAccounts();
+
+//Example with first account returned from list
+//account is numeric but setAccount parses raw return from the getAccounts() method
+$reporter->setAccount($accounts[0]);
+
+```
 ### Fetch the list of vendor id's ###
 ```php
 try{
