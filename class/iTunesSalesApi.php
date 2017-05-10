@@ -80,6 +80,14 @@ class iTunesSalesApi
      * @var string
      */
     private $_userName;
+    
+    
+    /**
+     * iTunes Connect Account
+     *
+     * @var string
+     */
+    private $_specificAccount = "";
 
 
     /**
@@ -218,6 +226,33 @@ class iTunesSalesApi
     public function setVendor($vendor)
     {
         $this->_vendor = $vendor;
+        return $this;
+    }
+    
+    /**
+     * set account : for more information on getting the accounts, check out the github project
+     *
+     * @param string $account
+     * @return iTunesSalesApi
+     */
+    public function setAccount($account)
+    {
+    	
+    	//If this is raw account from the getAccounts method
+    	if(strpos($account,",") !== false){
+    		//Extract only the account number
+    		$accountElements = explode(",",$account); 
+    		if(count($accountElements) == 2){
+    			$tmpAccount = trim($accountElements[1]);
+    			if(is_numeric($tmpAccount)){
+    				$account = $tmpAccount;
+    			}
+    			else{
+    				 $this->_returnError("Invalid account passed",true);
+    			}
+    		}
+    	} 
+        $this->_specificAccount = $account;
         return $this;
     }
 
@@ -562,7 +597,12 @@ class iTunesSalesApi
             "mode"=> "Normal",
             "queryInput"=> $queryInput
         );
-
+        if($this->_specificAccount != ""){
+       		$allParams["Account"] = $this->_specificAccount;
+        }
+        
+        
+       
 
         $jsonParams = "jsonRequest=".json_encode($allParams);
 
@@ -595,7 +635,8 @@ class iTunesSalesApi
         $header_size = $info["header_size"];
         $header = substr($return, 0, $header_size);
         $body = substr($return, $header_size);
-
+        
+        
 		//Accounts and vendors
         if($this->_queryMode != self::URL_PARAM_SALES_REPORT)
         {
@@ -680,7 +721,8 @@ class iTunesSalesApi
 
         return $file;
     }
-
+    
+  
     /**
      * @param $file
      * @return array
