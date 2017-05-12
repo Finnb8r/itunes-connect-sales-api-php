@@ -582,7 +582,7 @@ class iTunesSalesApi
         }
         
         //Build the query input
-        $queryInput = "[p=Reporter.properties, ".$this->_queryMode;
+        $queryInput = "[p=Reporter.properties,".($this->_specificAccount != "" ? " a={$this->_specificAccount}," : "")." ".$this->_queryMode;
         if($this->_queryMode == self::URL_PARAM_SALES_REPORT){
             $queryInput.=", ".$this->_vendor.",".$this->_reportType.",".$this->_reportSubType.",".$this->_reportDateType.",".$this->_reportDate;
         }
@@ -597,12 +597,8 @@ class iTunesSalesApi
             "mode"=> "Normal",
             "queryInput"=> $queryInput
         );
-        if($this->_specificAccount != ""){
-       		$allParams["Account"] = $this->_specificAccount;
-        }
         
         
-       
 
         $jsonParams = "jsonRequest=".json_encode($allParams);
 
