@@ -75,11 +75,12 @@ class iTunesSalesApi
     private $_reportMode = self::REPORT_MODE_ALL;
 
     /**
-     * iTunes Connect login
+     * iTunes Connect access token
      *
      * @var string
+     * @see https://help.apple.com/itc/appsreporterguide/?lang=en#/apd2f1f1cfa3
      */
-    private $_userName;
+    private $_accessToken;
     
     
     /**
@@ -88,14 +89,6 @@ class iTunesSalesApi
      * @var string
      */
     private $_specificAccount = "";
-
-
-    /**
-     * iTunes Connect password
-     *
-     * @var string
-     */
-    private $_password;
 
 
     /**
@@ -173,17 +166,13 @@ class iTunesSalesApi
 
     /**
      * iTunesSalesApi constructor.
-     * @param null $login
-     * @param null $password
+     * @param null $accessToken
      * @param null $vendor
      */
-    public function __construct($login = null, $password = null, $vendor = null)
+    public function __construct($accessToken = null, $vendor = null)
     {
-        if($login != null){
-            $this->_userName = $login;
-        }
-        if($password != null){
-            $this->_password = $password;
+        if($accessToken != null){
+            $this->_accessToken = $accessToken;
         }
         if($vendor != null){
             $this->_vendor = $vendor;
@@ -194,28 +183,17 @@ class iTunesSalesApi
 
 
     /**
-     * set login (iTunes connect user)
+     * set the access token
      *
-     * @param string $login
+     * @param string $accessToken
      * @return iTunesSalesApi
      */
-    public function setLogin($login)
+    public function setAccessToken($accessToken)
     {
-        $this->_userName = $login;
+        $this->_accessToken = $accessToken;
         return $this;
     }
 
-    /**
-     * set password (iTunes connect password)
-     *
-     * @param string $password
-     * @return iTunesSalesApi
-     */
-    public function setPassword($password)
-    {
-        $this->_password = $password;
-        return $this;
-    }
 
     /**
      * set vendor : for more information on getting the vendor, check out the github project
@@ -540,11 +518,8 @@ class iTunesSalesApi
      */
     private function _checkParams()
     {
-        if($this->_userName == null){
-            $this->_returnError('Please specify a username before attempting to fetch any reports',true);
-        }
-        if($this->_password == null){
-            $this->_returnError('Please specify a password before attempting to fetch any reports',true);
+        if($this->_accessToken == null){
+            $this->_returnError('Please specify an access token before attempting to fetch any reports',true);
         }
         if($this->_vendor == null){
             $this->_returnError('Please specify a vendor before attempting to fetch any reports',true);
@@ -591,8 +566,7 @@ class iTunesSalesApi
 
         //Build request parameters
         $allParams  = array(
-            "userid"=> $this->_userName,
-            "password"=> $this->_password,
+            "accesstoken"=> $this->_accessToken,
             "version"=> "1.0",
             "mode"=> "Normal",
             "queryInput"=> $queryInput

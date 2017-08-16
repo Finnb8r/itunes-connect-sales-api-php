@@ -4,12 +4,11 @@
 require_once('class/iTunesSalesApi.php');
 
 // First example, create new object with connection data straight away
-$reporter = new iTunesSalesApi("user@example.com","mysecretpassword","myvendorID");
+$reporter = new iTunesSalesApi("token-generated-from-itunes","myvendorID");
 
 // Second example, step by step
 $reporter = new iTunesSalesApi();
-$reporter->setLogin("user@example.com")
-			->setPassword("mysecretpassword")
+$reporter->setAccessToken("token-generated-from-itunes")
 			->setVendor("myvendorID")
 			->setFolder("/home/web/path/folder/sales")
 			->setUseCache(true)

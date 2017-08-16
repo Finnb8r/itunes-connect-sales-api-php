@@ -1,3 +1,5 @@
+# [UPDATE 10 Aug 2017]
+Current version now uses the access token as described [on the Apple website](https://help.apple.com/itc/appsreporterguide/?lang=en#/apd2f1f1cfa3)
 # [UPDATE 12 Feb 2017]
 Current version now works with the reporter service as <br>
 Apple have shutdown the autoingestion tool on december 13th 2016.
@@ -35,8 +37,7 @@ Create a new instance of iTunesSalesApi<br>
 ```php
 $reporter =  new iTunesSalesApi();
 
-$reporter->setLogin("mylogin@example.com")
-			->setPassword("myPassword")
+$reporter->setAccessToken("reporter-access-token")
 			->setVendor("myVendorId");
 ```
 ## Quick Example ##
